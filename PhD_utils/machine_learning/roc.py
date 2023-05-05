@@ -20,12 +20,16 @@ def plot_ROC(y_trues: np.ndarray, y_probas: np.ndarray,
     probas = y_probas[:, 1] if len(y_probas.shape) > 1 else y_probas
 
     fpr, tpr, t = roc_curve(y_trues, probas)
+    # AUC computed on the ROC fpr and tpr returns a
+    # ROC_AUC score as using roc_auc_score function
     roc_auc = auc(fpr, tpr)
     ax.plot(
         fpr, tpr, color=color,
         label=f'{label} (AUC = {roc_auc:0.2f})',
         lw=2, alpha=alpha
     )
+
+    return roc_auc
 
 def plot_CV_ROC(clf: BaseEstimator, X: np.ndarray, y: np.ndarray,
                 target: Optional[str]=None,
@@ -59,9 +63,11 @@ def plot_CV_ROC(clf: BaseEstimator, X: np.ndarray, y: np.ndarray,
 
     y_trues = np.concatenate(y_trues)
     y_probas = np.concatenate(y_probas)
-    plot_ROC(y_trues, y_probas, label=f'Total', ax=ax)
+    auc_score = plot_ROC(y_trues, y_probas, label=f'Total', ax=ax)
 
     ax.set_xlabel('False Positive Rate')
     ax.set_ylabel('True Positive Rate')
     ax.set_title(title)
     ax.legend(loc='lower right')
+
+    return auc_score
