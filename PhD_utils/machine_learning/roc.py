@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.metrics import roc_curve, auc
 from sklearn.base import BaseEstimator
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, StratifiedGroupKFold
 from sklearn.model_selection import BaseCrossValidator
 
 
@@ -32,6 +32,7 @@ def plot_ROC(y_trues: np.ndarray, y_probas: np.ndarray,
     return roc_auc
 
 def plot_CV_ROC(clf: BaseEstimator, X: np.ndarray, y: np.ndarray,
+                groups: Optional[np.ndarray]=None,
                 target: Optional[str]=None,
                 cv: Union[int,BaseCrossValidator]=5,
                 ax: Optional[plt.Axes]=None,
@@ -43,7 +44,10 @@ def plot_CV_ROC(clf: BaseEstimator, X: np.ndarray, y: np.ndarray,
         y_target = y
 
     if isinstance(cv, int):
-        cv = StratifiedKFold(n_splits=cv, shuffle=True)
+        if groups is not None:
+            cv = StratifiedGroupKFold(n_splits=cv)
+        else:
+            cv = StratifiedKFold(n_splits=cv, shuffle=True)
     
     ax = ax or plt.gca()
 
@@ -51,7 +55,7 @@ def plot_CV_ROC(clf: BaseEstimator, X: np.ndarray, y: np.ndarray,
 
     y_trues = []
     y_probas = []
-    for i, (train_idx, test_idx) in enumerate(cv.split(X,y)):
+    for i, (train_idx, test_idx) in enumerate(cv.split(X,y, groups=groups)):
         x_train, x_test, y_train, y_test = X[train_idx], X[test_idx], y_target[train_idx], y_target[test_idx]
 
         probas = clf.fit(x_train,y_train).predict_proba(x_test)
