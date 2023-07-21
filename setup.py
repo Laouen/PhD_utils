@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
 
+
+# TODO: add dependencies
 setup(
     name='PhD_utils',
     version='0.1.0',

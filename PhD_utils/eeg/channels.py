@@ -3,6 +3,7 @@ import mne
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
 from mne.channels import DigMontage, find_ch_adjacency
+import warnings
 
 
 def _get_closest_channels(org_montage: DigMontage, dest_montage: DigMontage):
@@ -140,6 +141,13 @@ def channels_recombine_parcelation(inst: Union[mne.Epochs, mne.io.Raw, mne.Evoke
     # electrode from the original montage
     empty_groups = {k:v for k,v in groups.items() if len(v) == 0}
     groups = {k:v for k,v in groups.items() if len(v) > 0}
+
+    if len(empty_groups) > 0:
+        warnings.warn(
+            f'The following channels in the destination montage do not have '
+            f'any corresponding channel in the original montage: '
+            f'{list(empty_groups.keys())}. They will be ignored.'
+        )
 
     # Recombine the channels to map the best possible the destintation montage
     res = mne.channels.combine_channels(
