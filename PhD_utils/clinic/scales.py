@@ -1,13 +1,13 @@
 
 
-def get_crs_conscious_state(auditory_func: int,
-                            visual_func: int,
-                            motor_func: int,
-                            verb_scale: int,
-                            comm_scale: int,
-                            arousal: int):
+def get_crsr(auditory_func: int,
+            visual_func: int,
+            motor_func: int,
+            verb_scale: int,
+            comm_scale: int,
+            arousal: int):
     
-    """ Brief: Calculate the Conscious state COMA, VS, MCS-/+, EMCS
+    """ Brief: Calculate the Conscious state COMA, UWS, MCS-/+, EMCS
     """
 
     if motor_func == 6 or comm_scale == 2:
@@ -19,4 +19,4 @@ def get_crs_conscious_state(auditory_func: int,
     if arousal == 0:
         return "COMA"
 
-    return "VS"
+    return "UWS"
