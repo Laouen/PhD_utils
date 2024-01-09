@@ -33,7 +33,7 @@ class RobustClipper:
 
 class ClipStandardScaler:
 
-    def __init__(self, q=0.001):
+    def __init__(self, q:float = 0.001):
         self.q = q
         self.robust_clipper = RobustClipper(q)
         self.standard_scaler = StandardScaler()
